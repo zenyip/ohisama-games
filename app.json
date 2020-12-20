@@ -2,22 +2,33 @@
   "expo": {
     "name": "QkoChallenge",
     "slug": "QkoChallenge",
-    "version": "1.0.0",
+    "version": "1.0.4",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon_Qko.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "sdkVersion": "39.0.0",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "config": {
+        "googleMobileAdsAppId": ""
+      },
+      "package": "com.RapdBeat.QkoChallenge"
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMobileAdsAppId": ""
+      },
+      "bundleIdentifier": "com.RapdBeat.QkoChallenge"
     },
     "web": {
       "favicon": "./assets/favicon.png"
