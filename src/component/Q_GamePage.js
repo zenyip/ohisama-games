@@ -8,7 +8,9 @@ import Instruction from './Instruction'
 import { AdMobInterstitial } from 'expo-ads-admob'
 import { addRetryCount } from '../reducer/retryCountReducer'
 import { Audio } from 'expo-av'
-import Colours from '../Colours'
+import theme from '../theme'
+import HighScore from "./HighScore"
+import { showScoreBoard } from '../reducer/scoreBoardReducer'
 
 const screen = Dimensions.get('window')
 
@@ -16,22 +18,18 @@ const instructionText = "Stop the watch as close as the target time. \n\n (10s o
 
 const Q_GamePage = (props) => {
     const [is25s, setIs25s] = useState(false)
-    const toggleSwitch = () => setIs25s(previousState => !previousState)
-
     const [isSwitchDisabled, setIsSwitchDisabled] = useState(false)
-
     const [buttonText, setButtonText] = useState('Start')
-
     const [startTime, setStartTime] = useState(null)
-    
     const [timer, setTimer] = useState(0)
-
     const [currentInterval, setCurrentInterval] = useState(null)
-
     const [stage, setStage] = useState('ready')
+    const [shownHighScore, setShownHighScore] = useState(false)
     
     const startSound = new Audio.Sound()
     const stopSound = new Audio.Sound()
+
+    const toggleSwitch = () => setIs25s(previousState => !previousState)
     
     const toggleStart = async () => {
         if (stage === 'ready') {
@@ -78,6 +76,32 @@ const Q_GamePage = (props) => {
             setButtonText('Start')
             setIsSwitchDisabled(false)
             setStage('ready')
+            setShownHighScore(false)
+        }
+    }
+
+    const toggleHighScore = () => {
+        props.showScoreBoard()
+        setShownHighScore(true)
+    }
+
+    const highScoreButton = () => {
+        if (!shownHighScore && stage === 'ended') {
+            return (
+                <Text accessibilityRole="button" style={styles.buttonText} onPress={toggleHighScore}> Check High Scores </Text>
+            )
+        } else {
+            return (
+                <Text style={styles.buttonText}> </Text>
+            )
+        }
+    }
+
+    const scoreBoard = () => {
+        if (props.scoreBoardOn) {
+            return <HighScore summitButtonOn={true} game={is25s ? "qko25" : "qko10"} />
+        } else {
+            return null
         }
     }
 
@@ -85,13 +109,14 @@ const Q_GamePage = (props) => {
         <View style={styles.container}>
             <View style={styles.main}>
                 <Clock target={is25s ? 25 : 10} time={timer} isEnded={stage === 'ended'}/>
+                {highScoreButton()}
                 <View style={styles.switchBar}>
                     <Text style={is25s ? styles.switchText : styles.switchText_chosen}>10s</Text>
                     <View style={{padding: 10}}>
                         <Switch
-                            trackColor = {{ false: Colours.THEME_PURPLE, true: Colours.THEME_VIOLET }}
-                            thumbColor = {is25s ? Colours.THEME_PURPLE : Colours.THEME_PURPLE}
-                            ios_backgroundColor = {Colours.THEME_VIOLET}
+                            trackColor = {{ false: theme.colours.skyBlue, true: theme.colours.lightViolet }}
+                            thumbColor = {is25s ? theme.colours.skyBlue : theme.colours.skyBlue}
+                            ios_backgroundColor = {theme.colours.lightViolet}
                             onValueChange={toggleSwitch}
                             value={is25s}
                             disabled={isSwitchDisabled}
@@ -106,6 +131,7 @@ const Q_GamePage = (props) => {
             </View>
             <AdBanner />
             <Instruction title="Q-ko Challenge" instruction={instructionText}/>
+            {scoreBoard()}
         </View>
     )
 }
@@ -113,7 +139,7 @@ const Q_GamePage = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: theme.colours.backgroundWhite,
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -128,20 +154,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     text: {
-        fontSize: 36,
+        fontSize: theme.fontSize.large,
         fontWeight: 'bold'
     },
     switchText: {
-        fontSize: 24,
-        color: Colours.LIGHT_GRAY
+        fontSize: theme.fontSize.normal,
+        color: theme.colours.lightGrey
     },
     switchText_chosen: {
-        fontSize: 24,
-        color: Colours.THEME_RED
+        fontSize: theme.fontSize.normal,
+        color: theme.colours.violet
     },
     startButton: {
         borderWidth: 5,
-        borderColor: Colours.THEME_PURPLE,
+        borderColor: theme.colours.skyBlue,
         width: screen.width/4,
         height: screen.width/4,
         borderRadius: screen.width/4,
@@ -149,19 +175,21 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     buttonText: {
-        fontSize: 24,
-        color: Colours.THEME_PURPLE
+        fontSize: theme.fontSize.normal,
+        color: theme.colours.skyBlue
     }
 })
 
 const mapStateToProps = (state) => {
 	return {
-        retryCount: state.retryCount
+        retryCount: state.retryCount,
+        scoreBoardOn: state.scoreBoardOn
     }
 }
 
 const mapDispatchToProps = {
-    addRetryCount
+    addRetryCount,
+    showScoreBoard
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Q_GamePage)

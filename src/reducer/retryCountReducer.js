@@ -8,7 +8,7 @@ const retryCountReducer = (state = 0, action) => {
     }
 }
 
-export const addRetryCount = (newCount) => {
+export const addRetryCount = () => {
     return {
         type: 'COUNT_RETRIES',
     }

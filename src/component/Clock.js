@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { StyleSheet, View, Text} from 'react-native'
-import Colours from '../Colours'
+import theme from '../theme'
+import { connect } from 'react-redux'
+import { setFinalScore } from '../reducer/finalScoreReducer'
 
 const grading = (diff) => {
-    diff = Math.abs(diff)
     if (diff < 0.05) {
         return 'Godlike'
     }
@@ -18,19 +19,26 @@ const grading = (diff) => {
 
 
 const Clock = (props) => {
+    const diff = Number(Math.round((props.time - props.target)+'e3')+'e-3')
+    const score = Math.abs(diff)
+
+    useEffect(() => {
+        props.setFinalScore(score)
+    }, [props.isEnded])
+    
     if (props.isEnded) {
         return (
             <View>
                 <View style={styles.gradingBox}>
-                    <Text style={styles.grades}>{grading(props.time - props.target)}</Text>
+                    <Text style={styles.grades}>{grading(score)}</Text>
                 </View>
                 <View style={styles.container}>
                     <Text style={styles.text}>{props.time}s</Text>
                     <Text style={styles.diffText}>
                         {
-                        (props.time - props.target) > 0 ?
-                        '+' + (props.time - props.target).toFixed(3) :
-                        (props.time - props.target).toFixed(3)}s
+                        diff > 0 ?
+                        '+' + diff.toFixed(3) :
+                        diff.toFixed(3)}s
                     </Text>
                 </View>
             </View>
@@ -52,11 +60,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     text: {
-        fontSize: 48,
+        fontSize: theme.fontSize.huge,
     },
     diffText: {
-        fontSize: 16,
-        color: Colours.THEME_RED,
+        fontSize: theme.fontSize.small,
+        color: theme.colours.violet,
         padding: 10
     },
     gradingBox: {
@@ -66,13 +74,21 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     grades: {
-        fontSize: 48,
+        fontSize: theme.fontSize.huge,
         fontWeight: 'bold',
-        color: Colours.THEME_PURPLE,
-        textShadowColor: Colours.THEME_VIOLET,
+        color: theme.colours.skyBlue,
+        textShadowColor: theme.colours.lightViolet,
         textShadowRadius: 2,
         textShadowOffset: {width: 2, height:2}
     }
 })
 
-export default Clock
+const mapStateToProps = (state) => {
+	return {}
+}
+
+const mapDispatchToProps = {
+    setFinalScore
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Clock)

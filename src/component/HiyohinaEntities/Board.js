@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react"
 import { View } from "react-native"
-import Colours from "../../Colours"
+import theme from '../../theme'
 
 class Board extends PureComponent {
     render() {
@@ -11,8 +11,8 @@ class Board extends PureComponent {
                 width: this.props.size[0],
                 height: this.props.size[1],
                 borderWidth: 2,
-                borderColor: Colours.THEME_VIOLET,
-                backgroundColor: Colours.THEME_PURPLE,
+                borderColor: theme.colours.lightViolet,
+                backgroundColor: theme.colours.skyBlue,
                 position: "absolute",
                 left: x,
                 top: y

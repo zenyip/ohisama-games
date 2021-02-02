@@ -2,6 +2,7 @@ import React, {useEffect} from 'react'
 import { StyleSheet, TouchableOpacity, Text } from 'react-native'
 import Logo from './Logo'
 import PropTypes from 'prop-types'
+import theme from '../theme'
 
 const CoverPage = (props) => {
     var timeout = null
@@ -22,7 +23,7 @@ const CoverPage = (props) => {
             <Text style={styles.text}>Ohisama Games</Text>
             <Logo />
             <Text style={styles.smallText}>by Rap. d. Beat</Text>
-            <Text style={styles.smallText}>v. 1.0.4</Text>
+            <Text style={styles.smallText}>v. 1.0.5</Text>
         </TouchableOpacity>
     )
 }
@@ -30,16 +31,16 @@ const CoverPage = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: theme.colours.backgroundWhite,
         alignItems: 'center',
         justifyContent: 'center'
     },
     text: {
-        fontSize: 36,
+        fontSize: theme.fontSize.large,
         fontWeight: 'bold'
     },
     smallText: {
-        fontSize: 16,
+        fontSize: theme.fontSize.small,
     }
 })
 

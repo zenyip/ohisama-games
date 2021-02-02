@@ -16,9 +16,12 @@ import { Board } from "./HiyohinaEntities/Board"
 import { AdMobInterstitial } from 'expo-ads-admob'
 import { addRetryCount } from '../reducer/retryCountReducer'
 import ButtonBack from "./ButtonBack"
-import Colours from "../Colours"
+import theme from "../theme"
 import { CheckTargetFallen } from "./HiyohinaSystems/CheckTargetFallen"
 import { CheckStolen } from "./HiyohinaSystems/CheckStolen"
+import HighScore from "./HighScore"
+import { showScoreBoard } from '../reducer/scoreBoardReducer'
+import { setFinalScore } from '../reducer/finalScoreReducer'
 
 const screen = Dimensions.get('window')
 
@@ -38,6 +41,7 @@ const Hi_GamePage = (props) => {
     const [isRunning, setIsRunning] = useState(false)
     const [buttonText, setButtonText] = useState('Start')
     const [score, setScore] = useState(0)
+    const [shownHighScore, setShownHighScore] = useState(false)
     const engine = useRef(null)
     const startSound = new Audio.Sound()
     const endSound = new Audio.Sound()
@@ -52,6 +56,7 @@ const Hi_GamePage = (props) => {
                 console.log("End Sound Playing Error", error)
             }
             setStage('ended')
+            props.setFinalScore(score)
             setIsRunning(false)
         }
         if (e.type === "stolen") {
@@ -87,6 +92,32 @@ const Hi_GamePage = (props) => {
             setButtonText('Start')
             setScore(0)
             setStage('ready')
+            setShownHighScore(false)
+        }
+    }
+
+    const toggleHighScore = () => {
+        props.showScoreBoard()
+        setShownHighScore(true)
+    }
+
+    const highScoreButton = () => {
+        if (!shownHighScore) {
+            return (
+                <Text accessibilityRole="button" style={styles.buttonText} onPress={toggleHighScore}> Check High Scores </Text>
+            )
+        } else {
+            return (
+                null
+            )
+        }
+    }
+
+    const scoreBoard = () => {
+        if (props.scoreBoardOn) {
+            return <HighScore summitButtonOn={true} game="hiyohina" />
+        } else {
+            return null
         }
     }
 
@@ -96,6 +127,7 @@ const Hi_GamePage = (props) => {
                 <View style={styles.finalScore}>
                     <Text style={styles.scoreText}>Final Score</Text>
                     <Text style={styles.scoreText}>{score}</Text>
+                    {highScoreButton()}
                 </View>
             )
         }
@@ -130,6 +162,7 @@ const Hi_GamePage = (props) => {
             {buttons()}
             <AdBanner />
             <Instruction title="HinaHiyo Game" instruction={instructionText}/>
+            {scoreBoard()}
         </View>
     )
 }
@@ -137,7 +170,7 @@ const Hi_GamePage = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: theme.colours.backgroundWhite,
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -148,7 +181,7 @@ const styles = StyleSheet.create({
     },
     gameContainer: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: theme.colours.backgroundWhite,
         justifyContent: 'center'
     },
     buttons: {
@@ -159,7 +192,7 @@ const styles = StyleSheet.create({
     },
     startButton: {
         borderWidth: 5,
-        borderColor: Colours.THEME_VIOLET,
+        borderColor: theme.colours.lightViolet,
         width: screen.width/4,
         height: screen.width/4,
         borderRadius: screen.width/4,
@@ -168,29 +201,32 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 24,
-        color: Colours.THEME_VIOLET
+        color: theme.colours.lightViolet
     },
     finalScore: {
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
-        top: screen.height/2
+        top: screen.height * 0.4,
     },
     scoreText: {
         fontSize: 36,
-        color: Colours.THEME_RED
+        color: theme.colours.violet
     }
 })
 
 
 const mapStateToProps = (state) => {
 	return {
-        retryCount: state.retryCount
+        retryCount: state.retryCount,
+        scoreBoardOn: state.scoreBoardOn
     }
 }
 
 const mapDispatchToProps = {
-    addRetryCount
+    addRetryCount,
+    showScoreBoard,
+    setFinalScore
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Hi_GamePage)

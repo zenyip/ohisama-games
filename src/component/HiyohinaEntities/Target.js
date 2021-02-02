@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react"
 import { StyleSheet, View, Text, Dimensions } from "react-native"
-import Colours from "../../Colours"
+import theme from '../../theme'
 
 const screen = Dimensions.get('window')
 const RADIUS = screen.width / 21
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 24,
-        color: Colours.THEME_VIOLET
+        color: theme.colours.lightViolet
     }
 })
 

@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet, TouchableOpacity, Image } from 'react-native'
 import PropTypes from 'prop-types'
 import { Audio } from 'expo-av'
+import theme from '../theme'
 
 const introSound = new Audio.Sound()
 const INTROSOUND_Q1 = require('../sound/heart.m4a')
@@ -37,7 +38,7 @@ const QkoButton = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: theme.colours.backgroundWhite,
         alignItems: 'center',
         justifyContent: 'center',
     },

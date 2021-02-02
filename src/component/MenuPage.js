@@ -4,6 +4,7 @@ import ButtonBack from './ButtonBack'
 import QkoButton from './QkoButton'
 import HiyohinaButton from './HiyohinaButton'
 import AdBanner from './AdBanner'
+import theme from '../theme'
 
 const MenuPage = (props) => {
     return(
@@ -24,7 +25,7 @@ const MenuPage = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: theme.colours.backgroundWhite,
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
         paddingVertical: 50
     },
     text: {
-        fontSize: 36,
+        fontSize: theme.fontSize.large,
         fontWeight: 'bold'
     }
 })

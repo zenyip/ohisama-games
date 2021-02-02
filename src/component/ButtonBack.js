@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text } from 'react-native'
-import Colours from '../Colours'
+import theme from '../theme'
 
 const ButtonBack = (props) => {
     const handleBack = () => {
@@ -18,14 +18,14 @@ const ButtonBack = (props) => {
 
 const styles = StyleSheet.create({
     backButton: {
-        fontSize: 16,
+        fontSize: theme.fontSize.small,
         padding: 5,
-        color: Colours.THEME_RED
+        color: theme.colours.violet
     },
     backButton_disabled: {
-        fontSize: 16,
+        fontSize: theme.fontSize.small,
         padding: 5,
-        color: Colours.LIGHT_GRAY
+        color: theme.colours.lightGrey
     }
 })
 

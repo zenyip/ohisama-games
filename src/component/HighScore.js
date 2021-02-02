@@ -1,34 +1,38 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { StyleSheet, Text, View, Dimensions } from 'react-native'
+import { connect } from 'react-redux'
 import theme from '../theme'
+import ScoreList from './ScoreList'
+import { hideScoreBoard } from '../reducer/scoreBoardReducer'
+import HighScoreSubmission from './HighScoreSubmission'
 
 const screen = Dimensions.get('window')
 
-const Instruction = (props) => {
-    const [instructionOn, setInstructionOn] = useState(true)
-
-    const handleAccept = () => {
-        setInstructionOn(false)
+const HighScore = (props) => {
+    const handleClose = () => {
+        props.hideScoreBoard()
     }
 
-    if (instructionOn === true) {
+    if (props.scoreBoardOn) {
         return(
             <View style={styles.overall}>
                 <View style={styles.background}/>
-                <View style={styles.instructionBoard}>
+                <View style={styles.scoreBoard}>
                     <View style={styles.title}>
                         <Text style={styles.titleText}>
-                            {props.title}
+                            High Scores
+                        </Text>
+                        <Text style={styles.currentScoreText}>
+                            Your Score: {props.finalScore}
                         </Text>
                     </View>
-                    <View style={styles.instruction}>
-                        <Text style={styles.instructionText}>
-                            {props.instruction}
-                        </Text>
+                    <View style={styles.highScores}>
+                        <ScoreList game={props.game}/>
                     </View>
                     <View style={styles.button}>
-                        <Text AccessibilityRole="Button" onPress={handleAccept} style={styles.buttonText}>
-                            Hide Instruction
+                        <HighScoreSubmission summitButtonOn={props.summitButtonOn} game={props.game} score={props.finalScore}/>
+                        <Text AccessibilityRole="Button" onPress={handleClose} style={styles.buttonText}>
+                            Close High Scores
                         </Text>
                     </View>
                 </View>
@@ -47,7 +51,7 @@ const styles = StyleSheet.create({
         height: screen.height,
         width: screen.width
     },
-    instructionBoard: {
+    scoreBoard: {
         opacity: 0.8,
         width: screen.width*3/4,
         height: screen.height*3/4,
@@ -64,7 +68,12 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textDecorationLine: "underline"
     },
-    instructionText: {
+    currentScoreText: {
+        fontSize: theme.fontSize.normal,
+        color: theme.colours.lightViolet,
+        fontWeight: "bold",
+    },
+    highScoreText: {
         fontSize: theme.fontSize.normal,
         color: theme.colours.lightViolet,
         fontWeight: "bold",
@@ -72,7 +81,8 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: theme.fontSize.small,
         fontWeight: "bold",
-        color: theme.colours.violet
+        color: theme.colours.violet,
+        padding: 10
     },
     title: {
         flex: 1,
@@ -80,8 +90,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 10
     },
-    instruction: {
-        flex: 2,
+    highScores: {
+        flex: 4,
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10
@@ -101,4 +111,15 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Instruction
+const mapStateToProps = (state) => {
+	return {
+        scoreBoardOn: state.scoreBoardOn,
+        finalScore: state.finalScore
+    }
+}
+
+const mapDispatchToProps = {
+    hideScoreBoard
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HighScore)
